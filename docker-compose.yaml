@@ -1,0 +1,32 @@
+version: "3.7"
+
+networks : 
+  blazornet:
+    name: blazornet
+
+services:
+  blazornet-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blazornet-app
+    volumes:
+        - ./app:/app
+    ports:
+       - 8200:80
+    working_dir: /app
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+    networks:
+     - blazornet
+
+  blazornet-db:
+    container_name: blazornet-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+        SA_PASSWORD: "password-1234"
+        ACCEPT_EULA: "Y"
+    ports:
+        - 1433:1433
+    networks:
+        - blazornet
